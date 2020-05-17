@@ -1,0 +1,9 @@
+.content {
+    position: relative;
+    min-height: 100vh;
+    padding: 50px;
+}
+
+:focus {
+    outline: none !important;
+}

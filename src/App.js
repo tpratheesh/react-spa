@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Route, HashRouter } from "react-router-dom";
+import Home from "./view/Home";
+import About from "./view/About";
+import Contact from "./view/Contact";
+import Navigation from "./components/Sidebar";
+import Footer from "./components/Footer";
+import "./assets/css/app.css";
 
-function App() {
+export const MenuContext = React.createContext();
+
+export default () => {
+  const MyProvider = props => {
+    const [menuOpenState, setMenuOpenState] = useState(false);
+
+    return (
+      <MenuContext.Provider
+        value={{
+          isMenuOpen: menuOpenState,
+          toggleMenu: () => setMenuOpenState(!menuOpenState),
+          stateChangeHandler: newState => setMenuOpenState(newState.isOpen)
+        }}
+      >
+        {props.children}
+      </MenuContext.Provider>
+    );
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MyProvider>
+      <HashRouter>
+        <div id="outer-container">
+          <Navigation />
+          <main id="page-wrap">
+            <div className="content">
+              <Route exact path="/" component={Home} />
+              <Route path="/about" component={About} />
+              <Route path="/contact" component={Contact} />
+            </div>
+            <div className="footer">
+              <Footer />
+            </div>
+          </main>
+        </div>
+      </HashRouter>
+    </MyProvider>
   );
-}
-
-export default App;
+};
